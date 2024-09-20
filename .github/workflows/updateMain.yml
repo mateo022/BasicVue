@@ -19,10 +19,6 @@ jobs:
         git config user.name "mateo022"
         git config user.email "mateoceballos022@gmail.com"
 
-    - name: Remove excluded files
-      run: |
-        git rm -r --cached .
-
     - name: Commit changes without excluded files
       run: |
         git commit -m "Syncing development to main - excluded certain files"
