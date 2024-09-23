@@ -1,0 +1,41 @@
+name: Sync development to main
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout development branch
+      uses: actions/checkout@v2
+      with:
+        ref: development
+
+    - name: Set up Git
+      run: |
+        git config user.name "mateo022"
+        git config user.email "mateoceballos022@gmail.com"
+
+    - name: Commit changes without excluded files
+      run: |
+        git commit -m "Syncing development to main - excluded certain files"
+
+    - name: Checkout main branch
+      run: |
+        git fetch origin
+        git checkout main
+        git reset --hard origin/main
+
+    - name: Merge changes from development
+      run: |
+        git merge development --no-commit --no-ff
+        git commit -m "Merge changes from development"
+
+    - name: Push changes to main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git push origin main
