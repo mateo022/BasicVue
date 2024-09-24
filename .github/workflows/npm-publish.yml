@@ -1,40 +1,36 @@
 name: build and test feature branch
 on:
   pull_request:
-    branches: [ develop ]
-    types: [ opened, reopened ]
+    branches: [development]
+    types: [opened, reopened]
 
-jobs: 
+jobs:
   build-feature:
     runs-on: ubuntu-latest
+
     steps:
-      #############################################################
-      # 1- Descargar código de la rama feature, instalar Node.js y comprobar que el código fuente es compilable
-      #############################################################
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          
-      - name: Pull and checkout from git repository
-        run: |
-           echo "Pulling and checking out from git repository"
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: '18.x'  # O la versión que prefieras
-          # cache: 'npm'   # Elimina el cache para descartar problemas relacionados
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build project with npm
+      - name: Install Vue CLI
+        run: npm install -g @vue/cli
+
+      - name: Build project
         run: npm run build
 
       - name: Run tests
         run: npm test
 
       - name: Build completed
-        run: |
-          echo "Build with npm completed"
+        run: echo "Build with npm completed"
 
