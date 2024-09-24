@@ -19,18 +19,21 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install dependencies
+      - name: Navigate to frontend directory and install dependencies
+        working-directory: frontend  # Cambia al directorio 'frontend'
         run: npm install
 
-      - name: Install Vue CLI
+      - name: Install Vue CLI globally
+        working-directory: frontend  # Asegúrate de estar en la carpeta 'frontend'
         run: npm install -g @vue/cli
 
       - name: Build project
+        working-directory: frontend  # Asegúrate de estar en la carpeta 'frontend'
         run: npm run build
 
       - name: Run tests
+        working-directory: frontend  # Asegúrate de estar en la carpeta 'frontend'
         run: npm test
 
       - name: Build completed
         run: echo "Build with npm completed"
-
