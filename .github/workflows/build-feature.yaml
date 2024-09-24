@@ -3,41 +3,45 @@ on:
   pull_request:
     branches: [ develop ]
     types: [ opened, reopened ]
+
 jobs: 
   build-feature:
     runs-on: ubuntu-latest
     steps:
       #############################################################
-      # 2- dowload code from feature branch , setup java 8 and check that source code is buildable
-      ########################################################
+      # 1- Descargar código de la rama feature, instalar Node.js y comprobar que el código fuente es compilable
+      #############################################################
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           
-      - name: pull and checkout from git repository
+      - name: Pull and checkout from git repository
         run: |
-           echo "pulling and checking out from git repository"
+           echo "Pulling and checking out from git repository"
 
-      - name: setup java 17 
-        uses: actions/setup-java@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'
+          node-version: '18.x' # puedes cambiar la versión según sea necesario
+          cache: 'npm'
 
-      - name: Cache Maven dependencies
+      - name: Cache npm dependencies
         uses: actions/cache@v2
         with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-maven-
+            ${{ runner.os }}-node-
 
-      - name: build with maven
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project with npm
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build completed
         run: |
-          mvn clean test package
-          echo "build with maven"
-
-
-
-    
-      
+          echo "Build with npm completed"
