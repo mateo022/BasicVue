@@ -1,0 +1,47 @@
+name: build and test feature branch
+on:
+  pull_request:
+    branches: [ develop ]
+    types: [ opened, reopened ]
+
+jobs: 
+  build-feature:
+    runs-on: ubuntu-latest
+    steps:
+      #############################################################
+      # 1- Descargar código de la rama feature, instalar Node.js y comprobar que el código fuente es compilable
+      #############################################################
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          
+      - name: Pull and checkout from git repository
+        run: |
+           echo "Pulling and checking out from git repository"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x' # puedes cambiar la versión según sea necesario
+          cache: 'npm'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project with npm
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build completed
+        run: |
+          echo "Build with npm completed"
