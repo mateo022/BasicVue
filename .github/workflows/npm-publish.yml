@@ -1,0 +1,36 @@
+name: build and test feature branch
+on:
+  pull_request:
+    branches: [development]
+    types: [opened, reopened]
+
+jobs:
+  build-feature:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Vue CLI
+        run: npm install -g @vue/cli
+
+      - name: Build project
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build completed
+        run: echo "Build with npm completed"
+
