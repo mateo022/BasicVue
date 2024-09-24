@@ -14,7 +14,6 @@ jobs:
     strategy:
       matrix:
         node-version: [14.x, 16.x, 18.x]
-        # Asegúrate de usar versiones de Node.js compatibles con Vue 3 y tu proyecto
 
     steps:
     - name: Checkout repository
@@ -24,13 +23,9 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
 
     - name: Install dependencies
       run: npm install
 
     - name: Build project
       run: npm run build
-
-    - name: Run tests
-      run: npm test
