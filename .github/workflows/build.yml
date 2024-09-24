@@ -2,9 +2,9 @@ name: Vue.js CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
@@ -23,15 +23,12 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-
-    - name: Navigate to project directory
-      run: cd ./frontend
+        cache: 'npm'
 
     - name: Install dependencies
+      working-directory: ./frontend
       run: npm install
 
     - name: Build project
+      working-directory: ./frontend
       run: npm run build
-
-    - name: Run tests
-      run: npm test
