@@ -27,7 +27,7 @@ jobs:
 
     - name: Merge changes from development
       run: |
-        git merge development --no-commit --no-ff
+        git merge development
         git commit -m "Merge changes from development"
 
     - name: Push changes to main
